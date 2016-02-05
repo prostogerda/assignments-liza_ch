@@ -69,12 +69,12 @@ def test(*args):
     def in_test(args):
         for current_max in args:
             pass
-        for index in args:
-            if index.__class__ == int and index > current_max:
-                current_max = index
-            elif index.__class__ != int:
+        for numb in args:
+            if numb.__class__ == int and numb > current_max:
+                current_max = numb
+            elif numb.__class__ != int:
                 raise ValueError("Input value {}"
-                                 " is not integer".format(index))
+                                 " is not integer".format(numb))
         return current_max
 
     if len(args) > 1:
