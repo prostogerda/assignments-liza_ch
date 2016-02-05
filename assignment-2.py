@@ -16,24 +16,23 @@ my_max(*args) finds current_maxum value in values, list or tuple
 def my_max(*args):
     if len(args) > 1:
         current_max = args[0]
-        for num in args:
-            if num.__class__ == int and num > current_max:
-                current_max = num
-            elif num.__class__ != int:
+        for numb in args:
+            if numb.__class__ == int and numb > current_max:
+                current_max = numb
+            elif numb.__class__ != int:
                 raise ValueError("Input value {}"
-                                 " is not integer".format(num))
+                                 " is not integer".format(numb))
     elif len(args) == 1:
         if args.__class__ == tuple or list:
-            for iterated_list in args:
+            for iteratedList in args:
                 pass
-            for current_max in iterated_list:
-                pass
-            for num in iterated_list:
-                if num.__class__ == int and num > current_max:
-                    current_max = num
-                elif num.__class__ != int:
+            current_max = iteratedList[0]
+            for numb in iteratedList:
+                if numb.__class__ == int and numb > current_max:
+                    current_max = numb
+                elif numb.__class__ != int:
                     raise ValueError("Input value {}"
-                                     " is not integer".format(num))
+                                     " is not integer".format(numb))
     else:
         raise ValueError("There is only one value {}"
                          "and it isn't tuple or list".format(*args))
@@ -41,12 +40,29 @@ def my_max(*args):
 
 
 def my_min(*args):
-    for minim in args:
-        pass
-    for index in args:
-        if index < minim:
-            minim = index
-    return minim
+    if len(args) > 1:
+        current_min = args[0]
+        for numb in args:
+            if numb.__class__ == int and numb < current_min:
+                current_min = numb
+            elif numb.__class__ != int:
+                raise ValueError("Input value {}"
+                                 " is not integer".format(numb))
+    elif len(args) == 1:
+        if args.__class__ == tuple or list:
+            for iteratedList in args:
+                pass
+            current_min = iteratedList[0]
+            for numb in iteratedList:
+                if numb.__class__ == int and numb < current_min:
+                    current_min = numb
+                elif numb.__class__ != int:
+                    raise ValueError("Input value {}"
+                                     " is not integer".format(numb))
+    else:
+        raise ValueError("There is only one value {}"
+                         "and it isn't tuple or list".format(*args))
+    return current_min
 
 
 def test(*args):
@@ -64,7 +80,7 @@ def test(*args):
     if len(args) > 1:
         in_test(args)
     elif len(args) == 1 and args.__class__ == tuple or list:
-        for iterated_list in args:
+        for iteratedList in args:
             pass
-        in_test(iterated_list)
+        in_test(iteratedList)
     return in_test(args)
