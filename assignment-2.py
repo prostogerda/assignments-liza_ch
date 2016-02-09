@@ -166,22 +166,24 @@ def evaluate_string(expression):
     for arg in expression:
         if ignore_list.get(arg):
             continue
-        if not isinstance(arg, int):
-            raise ValueError("Incorrect data type")
-        numbers.append(arg)
-        arg = next(expression)
-        if ignore_list.get(arg):
+        if operation_dict.get(arg):
+            operations.append(arg)
             continue
-        if not operation_dict.get(arg):
+        if arg.isdigit:
+            arg_int = int(arg)
+            numbers.append(arg_int)
+            continue
+        else:
             raise ValueError("Operation {} is not supported".format(arg))
-        operations.append(arg)
-        if len(numbers) != len(operations) + 1:
-            raise ValueError("Too many operations")
-        numbers_iter = iter(numbers)
-        acc = next(numbers_iter)
-        for num, oper in zip(numbers_iter, operations):
-            oper_func = operation_dict.get(oper)
-            acc = oper_func(acc, num)
+    if len(numbers) != len(operations) + 1:
+        raise ValueError("Too many operations")
+    numbers_iter = iter(numbers)
+    acc = next(numbers_iter)
+    for num, oper in zip(numbers_iter, operations):
+        oper_func = operation_dict.get(oper)
+        acc = oper_func(acc, num)
     return acc
 
 evaluate_string("2+7-3")
+
+evaluate_string("2+7 -3")
