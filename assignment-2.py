@@ -164,6 +164,8 @@ def evaluate_string(expression):
             continue
         if operation_dict.get(arg):
             operations.append(arg)
+            if not numbers:
+                numbers = [0]
             continue
         if arg.isdigit:
             arg_int = int(arg)
@@ -181,8 +183,8 @@ def evaluate_string(expression):
 
 evaluate_string("2+7-3")
 
-evaluate_string("2+7 -3")
+evaluate_string("+3+7 -3")
 
-evaluate_string("2+(7    -3")
+evaluate_string("-2+(7    -3")
 
-evaluate_string("2++(7    -3")
+evaluate_string("2++(7  -3")
