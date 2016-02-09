@@ -158,13 +158,9 @@ def evaluate_string(expression):
         "+": operator.add,
         "-": operator.sub
     }
-    ignore_list = {
-        "(": None,
-        ")": None,
-        " ": None
-    }
+    ignore_list = ["(", ")", " "]
     for arg in expression:
-        if ignore_list.get(arg):
+        if arg in ignore_list:
             continue
         if operation_dict.get(arg):
             operations.append(arg)
@@ -173,8 +169,7 @@ def evaluate_string(expression):
             arg_int = int(arg)
             numbers.append(arg_int)
             continue
-        else:
-            raise ValueError("Operation {} is not supported".format(arg))
+        raise ValueError("Operation {} is not supported".format(arg))
     if len(numbers) != len(operations) + 1:
         raise ValueError("Too many operations")
     numbers_iter = iter(numbers)
@@ -187,3 +182,7 @@ def evaluate_string(expression):
 evaluate_string("2+7-3")
 
 evaluate_string("2+7 -3")
+
+evaluate_string("2+(7    -3")
+
+evaluate_string("2++(7    -3")
