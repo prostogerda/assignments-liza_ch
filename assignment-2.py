@@ -144,11 +144,15 @@ def my_filter(fn, elements, **kwargs):
     return true_elements
 
 
+# Task 5
+
+
 def evaluate_string(expression):
     """
-    Calculates
-    :param expression:
-    :return:
+    Calculates result of arithmetical expression, which may consist on integer
+    numbers, addition and subtraction. Branches and spaces are ignored.
+    :param expression: string of numbers and "+" and "-" signs.
+    :return: result of arithmetical expression, integer number
     """
     if not isinstance(expression, str):
         raise ValueError("Please enter the string")
@@ -162,14 +166,29 @@ def evaluate_string(expression):
     for arg in expression:
         if arg in ignore_list:
             continue
+        if arg is ".":
+            raise ValueError("Function doesn't support float numbers")
         if operation_dict.get(arg):
             operations.append(arg)
             if not numbers:
                 numbers = [0]
             continue
         if arg.isdigit:
-            arg_int = int(arg)
-            numbers.append(arg_int)
+            arg_long_num = arg
+            # sub_expression = expression[int(arg):]
+            for arg_inner in expression[(int(arg) + 1):]:
+                if arg_inner.isdigit:
+                    arg_long_num += arg_inner
+                    arg = next(iter(expression))
+                    # Мне не придумать, как бы нормально взять следующее
+                    # значение наружного итератора, чтобы его не "обнулять"
+                    # и оставаться при этом во внутреннем.
+                # arg = next(iter(expression))
+                arg_int = int(arg_long_num)
+                numbers.append(arg_int)
+                continue
+            # arg_int = int(arg)
+            # numbers.append(arg_int)
             continue
         raise ValueError("Operation {} is not supported".format(arg))
     if len(numbers) != len(operations) + 1:
@@ -181,10 +200,9 @@ def evaluate_string(expression):
         acc = oper_func(acc, num)
     return acc
 
-evaluate_string("2+7-3")
-
-evaluate_string("+3+7 -3")
-
-evaluate_string("-2+(7    -3")
-
+evaluate_string("3+2-1")
+evaluate_string("2+7*0-3")
+evaluate_string("-3+(2    -1")
 evaluate_string("2++(7  -3")
+evaluate_string("233+7-3")
+evaluate_string("2+7.0-3")
