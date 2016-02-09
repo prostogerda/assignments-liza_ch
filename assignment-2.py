@@ -2,6 +2,7 @@
 
 
 from __future__ import division, print_function
+import operator
 
 
 def my_max(*args):
@@ -57,6 +58,9 @@ def my_max_nice(*args):
     :param args: any iterable object with integer numbers inside it.
     :return: maximum value
     """
+    if not args:
+        raise ValueError("Please enter some numbers")
+
     def max_finder(iterated_list):
         current_max = next(iterated_list)
         if isinstance(current_max, int):
@@ -70,15 +74,114 @@ def my_max_nice(*args):
         raise ValueError("Input value {}"
                         " is not integer".format(current_max))
 
-    if not args:
-        raise ValueError("Please enter some numbers")
     return max_finder(iter(args[0] if len(args) == 1 else args))
 
-my_max_nice(777, 675, 6)
-my_max_nice(2, 657, 77)
-my_max_nice([6, -988, 21])
-my_max_nice("QQQQ", 56, 87)
-my_max_nice(321, "WWWW", 76)
-my_max_nice(43, 21, "EEEE")
-my_max_nice(765)
-my_max_nice()
+
+def my_map(fn, elements, **kwargs):
+    result = []
+    for element in elements:
+        result.append(fn(element, **kwargs))
+    return result
+
+
+def calculate(numbers, operations):
+    if len(numbers) != len(operations) + 1:
+        raise ValueError("Too many operations")
+    operation_dict = {
+        "+": operator.add,
+        # "-": lambda operator.add,
+        "*": operator.mul,
+        "/": operator.div
+        }
+    numbers_iter = iter(numbers)
+    acc = next(numbers_iter)
+    for num, oper in zip(numbers_iter,operations):
+        oper_func = operation_dict.get(oper)
+        if not operation_dict.get(oper):
+            raise ValueError("Operation {} is not supported".format(oper))
+        acc = oper_func(acc, num)
+    return acc
+
+
+calculate([1, 3, 2], ["+", "*"])
+
+
+def calculate2(numbers, operations):
+    if len(numbers) != len(operations) + 1:
+        raise ValueError("qqq")
+    operation_dict = {
+        "+": operator.add,
+        # "-": lambda operator.add,
+        "*": operator.mul,
+        "/": operator.div
+        }
+    # Find string in Lesson5 from Ilia
+    return reduce(lambda acc, (num, oper): operation_dict[oper](acc,num),
+                  zip(numbers,operations))
+
+
+def new_max(iterable):
+    return reduce(lambda cur_max, num: num if num > cur_max else cur_max,
+                  iterable)
+
+# Homework 2 part 2
+# Task 3 part 2
+
+
+def my_filter(fn, elements, **kwargs):
+    """
+    Function my_filter returns list of elements, for which result of
+    function fn returns True.
+    :param fn is name of function, which returns True or False
+    :param elements: list of elements to work with
+    :param kwargs: parameters of function fn
+    :return: List of elements
+    """
+    true_elements = []
+    for element in elements:
+        if fn(element, **kwargs):
+            true_elements.append(element)
+    return true_elements
+
+
+def evaluate_string(expression):
+    """
+    Calculates
+    :param expression:
+    :return:
+    """
+    if not isinstance(expression, str):
+        raise ValueError("Please enter the string")
+    numbers = []
+    operations = []
+    operation_dict = {
+        "+": operator.add,
+        "-": operator.sub
+    }
+    ignore_list = {
+        "(": None,
+        ")": None,
+        " ": None
+    }
+    for arg in expression:
+        if ignore_list.get(arg):
+            continue
+        if not isinstance(arg, int):
+            raise ValueError("Incorrect data type")
+        numbers.append(arg)
+        arg = next(expression)
+        if ignore_list.get(arg):
+            continue
+        if not operation_dict.get(arg):
+            raise ValueError("Operation {} is not supported".format(arg))
+        operations.append(arg)
+        if len(numbers) != len(operations) + 1:
+            raise ValueError("Too many operations")
+        numbers_iter = iter(numbers)
+        acc = next(numbers_iter)
+        for num, oper in zip(numbers_iter, operations):
+            oper_func = operation_dict.get(oper)
+            acc = oper_func(acc, num)
+    return acc
+
+evaluate_string("2+7-3")
