@@ -108,16 +108,15 @@ calculate([1, 3, 2], ["+", "*"])
 
 def calculate2(numbers, operations):
     if len(numbers) != len(operations) + 1:
-        raise ValueError("qqq")
-    operation_dict = {
+        raise ValueError("msg")
+    oper_dict = {
         "+": operator.add,
-        # "-": lambda operator.add,
         "*": operator.mul,
         "/": operator.div
-        }
-    # Find string in Lesson5 from Ilia
-    return reduce(lambda acc, (num, oper): operation_dict[oper](acc,num),
-                  zip(numbers,operations))
+    }
+    number_iterator = iter(numbers)
+    return reduce(lambda acc, (num, oper): oper_dict[oper](acc, num),
+                  izip(number_iterator, operations), next(number_iterator))
 
 
 def new_max(iterable):
@@ -139,7 +138,7 @@ def my_filter(fn, elements, **kwargs):
     """
     true_elements = []
     for element in elements:
-        if fn(element, **kwargs):
+        if bool(fn(element, **kwargs)):
             true_elements.append(element)
     return true_elements
 
@@ -173,17 +172,16 @@ def evaluate_string(expression):
             if not numbers:
                 numbers = [0]
             continue
-        if arg.isdigit:
-            arg_long_num = arg
+        if arg.isdigit():
+            numbers_list = []
+            arg_long_num = ""
             # sub_expression = expression[int(arg):]
-            for arg_inner in expression[(int(arg) + 1):]:
-                if arg_inner.isdigit:
-                    arg_long_num += arg_inner
+            for arg_inner in expression[int(arg):]:
+                if arg_inner.isdigit():
+                    numbers_list.append(arg_inner)
                     arg = next(iter(expression))
-                    # Мне не придумать, как бы нормально взять следующее
-                    # значение наружного итератора, чтобы его не "обнулять"
-                    # и оставаться при этом во внутреннем.
                 # arg = next(iter(expression))
+                arg_long_num.join(numbers_list)
                 arg_int = int(arg_long_num)
                 numbers.append(arg_int)
                 continue
