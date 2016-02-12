@@ -131,14 +131,15 @@ def my_filter(fn, elements, **kwargs):
     """
     Function my_filter returns list of elements, for which result of
     function fn returns True.
-    :param fn is name of function, which returns True or False
+    :param fn is name of function, result of which might be interpreted
+    by bool()
     :param elements: list of elements to work with
     :param kwargs: parameters of function fn
     :return: List of elements
     """
     true_elements = []
     for element in elements:
-        if bool(fn(element, **kwargs)):
+        if fn(element, **kwargs):
             true_elements.append(element)
     return true_elements
 
