@@ -2,7 +2,7 @@
 
 
 from __future__ import division, print_function
-
+import operator
 
 # Task 1. Fasta-reader
 
@@ -11,51 +11,38 @@ def fasta_reader(fp):
     """
     Reads fasta-files.
     :param fp: absolute path to file
-    :return: tuples of sequences in format (name, seq, comments)
+    :return: tuples of sequences in format (name, seq)
     """
-    fasta_list = []
-    name_seq_comm_list = []
-    seq = ""
-    comment = ""
+    fasta_start_sym = ">"
+    fasta_comment_sym = "#"
+    output_list = []
+    name_seq_list = []
+    seq_list = []
     with open(fp) as fasta_file:
         for line in fasta_file:
-            if len(line) == 1:
+            if not line.strip():
                 continue
-            if line.startswith(">"):
-                fasta_list.append(tuple(name_seq_comm_list))
-                name_seq_comm_list = ["", "", ""]
-                name_seq_comm_list[0] = line.strip('\n')
-                # Do this ^ with "append"?
-                seq = ""
-                comment = ""
-            if line.startswith("#"):
-                comment.strip('\n')
-                comment.join(line)
-                name_seq_comm_list[2] = comment
-            seq.strip('\n')
-            seq.join(line)
-            name_seq_comm_list[1] = seq
-    print(*fasta_list[1:] if fasta_list[0] == () else fasta_list)
-    # variant for case, when file starts not from ">"
-    # print(*fasta_list[1:] if fasta_list[0][0] == "" else fasta_list)
-
-    #where shall I use "split"?
+            if line.startswith(fasta_comment_sym):
+                continue
+            if line.startswith(fasta_start_sym):
+                name_seq_list.append("".join(seq_list))
+                output_list.append(tuple(name_seq_list))
+                # output_list.append(tuple(name_seq_list.append
+                # ("".join(seq_list))))
+                seq_list = []
+                name_seq_list = []
+                name_seq_list.append(line.strip())
+            else:
+                seq_list.append(line.strip())
+        name_seq_list.append("".join(seq_list))
+        output_list.append(tuple(name_seq_list))
+    return output_list[1:]
 
 
-fasta_reader("/home/liza/Documents/test.fasta")
+print (fasta_reader("/home/liza/Documents/test.fasta"))
 
 
-def test(fp):
-    seq = ""
-    with open(fp) as fasta_file:
-        for line in fasta_file:
-            seq.join(line)
-        print(seq.strip('\n'))
-
-test("/home/liza/Documents/test.fasta")
-
-
-#Task fom previous HW
+# Task fom previous HW
 
 def evaluate_string(expression):
     """
@@ -68,39 +55,44 @@ def evaluate_string(expression):
         raise ValueError("Please enter the string")
     numbers = []
     operations = []
-    long_num = ""
+    branch_counter = 0
+    long_num = []
     operation_dict = {
         "+": operator.add,
         "-": operator.sub
     }
-    ignore_list = ["(", ")", " "]
+    ignore_list = [" "]
     for arg in expression:
         if arg in ignore_list:
             continue
         if arg is ".":
             raise ValueError("Function doesn't support float numbers")
-        if operation_dict.get(arg):
-            operations.append(arg)
-            if not numbers:
-                numbers = [0]
-            numbers_list.append(long_num)
-            long_num = ""
+        if arg == "(":
+            branch_counter += 1
             continue
-        if arg.isdigit():
-            numbers_list = []
-
-            # sub_expression = expression[int(arg):]
-
-                    arg = next(iter(expression))
-                # arg = next(iter(expression))
-                long_num.join(numbers_list)
-                arg_int = int(long_num)
-                numbers.append(arg_int)
+        if arg == ")":
+            branch_counter -= 1
+            if branch_counter >= 0:
                 continue
-            # arg_int = int(arg)
-            # numbers.append(arg_int)
+            raise ValueError("Incorrect branches")
+        # PyCharm doesn't give to write 3 previous lines as ternary operator
+        if arg.isdigit():
+            long_num.append(arg)
+            continue
+        if operation_dict.get(arg):
+            if not long_num:
+                raise ValueError("Too many operations")
+            numbers.append(int("".join(long_num)))
+            long_num = []
+            operations.append(arg)
+            if numbers == []:
+                # if not numbers?
+                numbers = [0]
             continue
         raise ValueError("Operation {} is not supported".format(arg))
+    numbers.append(int("".join(long_num)))
+    if branch_counter != 0:
+        raise ValueError("Incorrect branches")
     if len(numbers) != len(operations) + 1:
         raise ValueError("Too many operations")
     numbers_iter = iter(numbers)
@@ -110,9 +102,9 @@ def evaluate_string(expression):
         acc = oper_func(acc, num)
     return acc
 
-evaluate_string("3+2-1")
+evaluate_string("333+2-1")
 evaluate_string("2+7*0-3")
 evaluate_string("-3+(2    -1")
 evaluate_string("2++(7  -3")
-evaluate_string("233+7-3")
-evaluate_string("2+7.0-3")
+evaluate_string("23(3+)7-3")
+evaluate_string("2+7.0- 3 ")
