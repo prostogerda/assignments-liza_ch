@@ -13,8 +13,8 @@ def fasta_reader(fp):
     :param fp: absolute path to file
     :return: tuples of sequences in format (name, seq)
     """
-    fasta_start_sym = ">"
-    fasta_comment_sym = "#"
+    FASTA_START_SYM = ">"
+    FASTA_COMMENT_SYM = "#"
     output_list = []
     name_seq_list = []
     seq_list = []
@@ -22,9 +22,9 @@ def fasta_reader(fp):
         for line in fasta_file:
             if not line.strip():
                 continue
-            if line.startswith(fasta_comment_sym):
+            if line.startswith(FASTA_COMMENT_SYM):
                 continue
-            if line.startswith(fasta_start_sym):
+            if line.startswith(FASTA_START_SYM):
                 name_seq_list.append("".join(seq_list))
                 output_list.append(tuple(name_seq_list))
                 # output_list.append(tuple(name_seq_list.append
@@ -55,44 +55,44 @@ def evaluate_string(expression):
         raise ValueError("Please enter the string")
     numbers = []
     operations = []
-    branch_counter = 0
+    bracket_counter = 0
     long_num = []
     operation_dict = {
         "+": operator.add,
         "-": operator.sub
     }
     ignore_list = [" "]
-    for arg in expression:
-        if arg in ignore_list:
+    for char in expression:
+        if char in ignore_list:
             continue
-        if arg is ".":
+        if char is ".":
             raise ValueError("Function doesn't support float numbers")
-        if arg == "(":
-            branch_counter += 1
+        if char == "(":
+            bracket_counter += 1
             continue
-        if arg == ")":
-            branch_counter -= 1
-            if branch_counter >= 0:
+        if char == ")":
+            bracket_counter -= 1
+            if bracket_counter >= 0:
                 continue
-            raise ValueError("Incorrect branches")
+            raise ValueError("Incorrect brackets")
         # PyCharm doesn't give to write 3 previous lines as ternary operator
-        if arg.isdigit():
-            long_num.append(arg)
+        if char.isdigit():
+            long_num.append(char)
             continue
-        if operation_dict.get(arg):
+        if operation_dict.get(char):
             if not long_num:
                 raise ValueError("Too many operations")
             numbers.append(int("".join(long_num)))
             long_num = []
-            operations.append(arg)
+            operations.append(char)
             if numbers == []:
                 # if not numbers?
                 numbers = [0]
             continue
-        raise ValueError("Operation {} is not supported".format(arg))
+        raise ValueError("Operation {} is not supported".format(char))
     numbers.append(int("".join(long_num)))
-    if branch_counter != 0:
-        raise ValueError("Incorrect branches")
+    if bracket_counter != 0:
+        raise ValueError("Incorrect brackets")
     if len(numbers) != len(operations) + 1:
         raise ValueError("Too many operations")
     numbers_iter = iter(numbers)
