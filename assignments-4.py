@@ -50,12 +50,12 @@ def p_dist_nice(str1, str2):
     GAP_SYMBOL = "-"
     if len(str1) != len(str2):
         raise ValueError("Strings have unequal length")
-    return sum(char1 != char2 and char1 != GAP_SYMBOL and char2 != GAP_SYMBOL
-               for char1, char2 in izip(str1, str2)
-               ) / (len(str1) - str1.count("-") - str2.count("-"))
+    return sum(char1 != char2 and char1 != GAP_SYMBOL and
+               char2 != GAP_SYMBOL for char1, char2 in izip(str1, str2)) / (
+        len(str1) - str1.count("-") - str2.count("-"))
 
 
-p_dist_nice("qqqqqwwwww", "qq-eqwwwww")
+p_dist_nice("qqqqqwwwww", "qrq-qwwwwt")
 
 
 def matrix_multiplication(matr1, matr2):
