@@ -14,25 +14,23 @@ def fasta_reader(fp):
     """
     FASTA_START_SYM = ">"
     FASTA_COMMENT_SYM = "#"
-    name_seq_list = []
-    seq_list = []
+    name_seq, seq = [], []
     with open(fp) as fasta_file:
         for line in fasta_file:
-            if not line.strip():
-                continue
-            if line.startswith(FASTA_COMMENT_SYM):
+        # for line in (l for l in fasta_file if l.strip()):
+        # doesn't need not line.strip()
+            if not line.strip() or line.startswith(FASTA_COMMENT_SYM):
                 continue
             if line.startswith(FASTA_START_SYM):
-                name_seq_list.append("".join(seq_list))
-                if name_seq_list[0]:
-                    yield tuple(name_seq_list)
-                seq_list = []
-                name_seq_list = []
-                name_seq_list.append(line.strip())
+                name_seq.append("".join(seq))
+                if name_seq[0]:
+                    yield tuple(name_seq)
+                seq, name_seq = [], []
+                name_seq.append(line.strip("> \n"))
             else:
-                seq_list.append(line.strip())
-        name_seq_list.append("".join(seq_list))
-        yield tuple(name_seq_list)
+                seq.append(line.strip())
+        name_seq.append("".join(seq))
+        yield tuple(name_seq)
 
 
 def main():
