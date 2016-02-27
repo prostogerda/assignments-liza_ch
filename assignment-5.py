@@ -7,8 +7,6 @@ from itertools import imap
 
 NUCLEOTIDES = ["A", "T", "G", "C"]
 GAP_SYMBOL = "-"
-
-
 CODONS = {
     "TTT": "F",
     "TTC": "F",
@@ -78,6 +76,15 @@ CODONS = {
 
 
 def translate_dna_to_aa(seq):
+    """
+    Translates nucleotide sequence to protein
+    Each 3 gaps are "translated" to one gap
+    :type seq: str
+    :param seq:
+    :return: string of amino acids and gaps
+    :raise ValueError, if there are incorrect symbols
+    :raise ValueError, Amount of gaps is not multiple of 3
+    """
     gaps = []
     codon = []
     aa_seq = []
@@ -111,11 +118,9 @@ def reconstruct_protein_alignment(*args):
     :type args: str
     :param args:
     :return: tuple of translated sequences.
-    Each 3 gaps are "translated" to one gap
-    :return: ValueError, if strings have different length
-    :return: ValueError, if length is not multiple of 3
-    :return: ValueError, if there are incorrect symbols
-    :return: ValueError, Amount of gaps is not multiple of 3
+    :raise ValueError, if strings have different length
+    :raise ValueError, if length is not multiple of 3
+
     """
     if len(set(imap(len, args))) != 1:
         raise ValueError("Strings in alignment have different length")
