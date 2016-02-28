@@ -12,27 +12,27 @@ Raises errors when gets not number or incorrect number.
 """
 
 
-def decompose(num):
+def decompose(n):
     """
-    Finds maximum different natural numbers, sum of which equal to num.
-    :type num: int
-    :param num:
-    :return: list of sorted numbers
+    Finds maximum different natural numbers, sum of which equal to n.
+    :type n: int
+    :param n:
+    :return: list of numbers
     """
     numbers = []
-    special_values = [1, 2, 4]
-    while num not in special_values:
-        if num % 2:
-            numbers.append((num // 2) + 1)
+    if n == 1 or n == 2:
+        numbers.append(n)
+        return numbers
+    numbers = [1]
+    ost = n -1
+    while ost:
+        if ost > 2 * (numbers[-1] + 1):
+            numbers.append(numbers[-1] + 1)
+            ost -= numbers[-1]
         else:
-            numbers.append(num // 2)
-        num //= 2
-    if num == 4:
-        numbers.append(1)
-        numbers.append(3)
-    if num == 2 or num == 1:
-        numbers.append(num)
-    return sorted(numbers)
+            numbers.append(ost)
+            ost -= numbers[-1]
+            return numbers
 
 
 def main():
