@@ -12,41 +12,35 @@ Raises errors when gets not number or incorrect number.
 """
 
 
-numbers = []
-
-
 def decompose(num):
     """
     Finds maximum different natural numbers, sum of which equal to num.
     :type num: int
     :param num:
-    :return: list of numbers
+    :return: list of sorted numbers
     """
+    numbers = []
+    special_values = [1, 2, 4]
+    while num not in special_values:
+        if num % 2:
+            numbers.append((num // 2) + 1)
+        else:
+            numbers.append(num // 2)
+        num //= 2
     if num == 4:
         numbers.append(1)
         numbers.append(3)
-        return numbers
     if num == 2 or num == 1:
         numbers.append(num)
-        return numbers
-    if num % 2:
-        numbers.append((num // 2) + 1)
-    else:
-        numbers.append(num // 2)
-    decompose(num // 2)
     return sorted(numbers)
 
 
 def main():
     input_number = raw_input("Enter the natural number from 1 to 10^9: ")
     if not input_number.isdigit():
-        # 2 next lines may be written as raise ValueError(),
-        # but it looks not so beautiful in std_out
-        print("{} is not the number".format(input_number))
-        exit()
+        raise ValueError("{} is not the number".format(input_number))
     if not (1 <= int(input_number) <= 10**9):
-        print("Incorrect number")
-        exit()
+        raise ValueError("Incorrect number")
     print(*decompose(int(input_number)))
 
 
