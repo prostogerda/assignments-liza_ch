@@ -2,6 +2,7 @@
 
 
 from __future__ import print_function, division
+import random
 
 
 class Node(object):
@@ -61,27 +62,40 @@ class SearchTree(object):
         """
         if not isinstance(new_node, Node):
             raise ValueError("`new_node` should be a `Node` instance")
-        if not SearchTree:
-            self._node.append = new_node
-        current_node = self._node[0]
-        while current_node.l_child or current_node.r_child:
-            if new_node > current_node and not current_node.l_child:
-                new_node._parent = current_node
-                current_node.l_child = new_node
-                break
-            if new_node <= current_node and not current_node.r_child:
-                new_node._parent = current_node
-                current_node.r_child = new_node
-                break
-            if new_node > current_node and current_node.l_child:
-                current_node = current_node.l_child
-                continue
-            if new_node <= current_node and current_node.r_child:
-                current_node = current_node.r_child
-                continue
+        if not self._node:
+            self._node.append(new_node)
+        else:
+            current_node = self._node[0]
+            self._node.append(new_node)
+            while current_node:
+                if new_node > current_node and not current_node.r_child:
+                    new_node._parent = current_node
+                    current_node._r_child = new_node
+                    break
+                if new_node <= current_node and not current_node.l_child:
+                    new_node._parent = current_node
+                    current_node._l_child = new_node
+                    break
+                if new_node > current_node and current_node.r_child:
+                    current_node = current_node.r_child
+                elif new_node <= current_node and current_node.l_child:
+                    current_node = current_node.l_child
+
+    # @staticmethod
+    # def _exchange_links(node1, node2):
+    #     """
+    #     :type node1: Node
+    #     :param node1:
+    #     :type node2: Node
+    #     :param node2:
+    #     :return:
+    #     """
+    #     node1._parent, node2._parent = node2.parent, node1.parent
+    #     node1._l_child, node2._l_child = node2.l_child, node1.l_child
+    #     node1._r_child, node2._r_child = node2.r_child, node1.r_child
 
     @staticmethod
-    def _exchange(self, node1, node2):
+    def _exchange_values(node1, node2):
         """
         :type node1: Node
         :param node1:
@@ -89,51 +103,73 @@ class SearchTree(object):
         :param node2:
         :return:
         """
-        node1._parent, node2._parent = node2.parent, node1.parent
-        node1._l_child, node2._l_child = node2.l_child, node1.l_child
-        node1._r_child, node2._r_child = node2.r_child, node1.r_child
+        node1._value, node2._value = node2.value, node1.value
 
-    # def _percolate_down(self, ):
-    #     while (i * 2) <= len(self):
-    #         min_child_index = self._min_child_idx(i)
-    #         if self._node[i] > self._node[min_child_index]:
-    #             self._exchange(i, min_child_index)
-    #         i = min_child_index
-    #
-    # def _children_indices(self, i):
-    #     possible_children = [i * 2, (i * 2) + 1]
-    #     return tuple(idx for idx in possible_children if idx <= len(self))
-    #
-    # def get_min(self):
-    #     if not self:
-    #         raise ValueError("The heap is empty")
-    #     return self._node[1]
-    #
-    # def pop_min(self):
-    #     min_val = self.get_min()
-    #     self._exchange(1, len(self))
-    #     self._node.pop()
-    #     self._percolate_down(1)
-    #     return min_val
-    #
-    # def push(self, item):
-    #     if not isinstance(item, Node):
-    #         raise ValueError("`item` should be a `Node` instance")
-    #     self._node.append(item)
-    #     self._percolate_up(len(self))
+    def __contains__(self, item):
+        search_node = Node(item)
+        current_node = self._node[0]
+        while current_node:
+            if search_node == current_node:
+                return True
+            elif search_node > current_node:
+                if not current_node.r_child:
+                    return False
+                current_node = current_node.r_child
+            else:
+                if not current_node.l_child:
+                    return False
+                current_node = current_node.l_child
+        return False
+
+    def pop(self, value):
+        pop_value = Node(value)
+        if pop_value not in self._node:
+            return None
+        current_node = self._node[0]
+        while current_node:
+            if pop_value == current_node:
+                if not current_node.r_child:
+                    current_node.parent._r_child = current_node.l_child
+                    current_node.l_child._parent = current_node.parent
+                elif not current_node.l_child:
+                    current_node.parent._r_child = current_node.r_child
+                    current_node.r_child._parent = current_node.parent
+                else:
+                    self._exchange_values(current_node, current_node.r_child)
+            elif pop_value <= current_node:
+                current_node = current_node.l_child
+            else:
+                current_node = current_node.r_child
+        return value if current_node else None
 
 
-def test_heap():
-    heap = MinHeap()
-    nodes = [Node(val, val) for val in xrange(9, -1, -1)]
+def make_search_tree(lst):
+    root = lst[random.randint(0, len(lst)-1)]
+    tree = SearchTree()
+    for i in xrange(len(lst)):
+        if i != root:
+            tree.push(Node(lst[i]))
+    return tree
+
+
+def test_tree():
+    tree = SearchTree()
+    nodes = [8, 4, 10, 2, 3, 1, 9, 11, 15]
+    for num in nodes:
+        tree.push(Node(num))
     for node in nodes:
-        heap.push(node)
-    while heap:
-        print(heap.pop_min())
+        tree.pop(node)
+        # node in tree
+    # nodes2 = [8, 4, 10, 2, 3, 1, 9, 11, 15]
+    # make_search_tree(nodes2)
+    # tree = SearchTree()
+    # nodes = [Node(random.randint(1, 20)) for _ in xrange(10)]
+    # while tree:
+    #     print(tree.pop(random.randint(1, 20)))
 
 
 def main():
-    test_heap()
+    test_tree()
 
 if __name__ == "__main__":
     main()
