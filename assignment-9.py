@@ -26,11 +26,24 @@ def longest_nonincreasing_subseq_sqr(seq):
             best_subseq_rev.append(num)
             current_best_len -= 1
         best_subtasks.pop()
-    best_subseq.extend(item for item in reversed(best_subseq_rev))
+    best_subseq.extend(reversed(best_subseq_rev))
     return best_subseq.pop() or best_subseq
 
 
 def longest_nonincreasing_subseq_log(seq):
+    """
+    Finds one of longest nonincreasing subsequences in sequence.
+    complexity ~ n*log(n)
+    :type seq: collections.Sequence[int]
+    :param seq:
+    :return:
+    :rtype: list
+    """
+    best_values = [0] * len(seq)
+    pathways = [-1] * len(seq)
+    best_value = None
+
+
     pass
 
 
@@ -63,7 +76,7 @@ def longest_common_subseq(seq1, seq2):
             subseq_reversed.append(seq2[i-1])
             i -= 1
             j -= 1
-    return subseq.extend(item for item in reversed(subseq_reversed)) or subseq
+    return subseq.extend(reversed(subseq_reversed)) or subseq
 
 
 def test_subseq():
@@ -78,7 +91,7 @@ def test_nonincreasing_sqr():
 
 
 def test_nonincreasing_log():
-    seq = [12, 10, 8, 22, 0, -7]
+    seq = [7, 7, 7, 6, 5, 10, 4, 9, 8, 8, 7, 2, -1]
     longest_nonincreasing_subseq_log(seq)
     pass
 
