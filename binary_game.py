@@ -62,6 +62,7 @@ def compare(guess: int, unknown_num: int, curr_lives: int, max_rand_num: int):
     :param guess:
     :param unknown_num:
     :param curr_lives: > 0
+    :param max_rand_num
     :return:
     """
     win = False
