@@ -29,9 +29,8 @@ def num_of_odd_sums(numbers: list):
     :param numbers:
     :return:
     """
-    return reduce(sum, (1 if digits_are_odd(int(num_str) + reverse(num_str))
-                        else 0 for num_str in numbers))
-    # something is wrong in this function
+    return sum(digits_are_odd(int(num_str) + reverse(num_str))
+               for num_str in numbers)
 
 
 def main():
@@ -42,6 +41,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
